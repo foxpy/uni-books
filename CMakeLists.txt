@@ -12,6 +12,7 @@ endif()
 
 add_subdirectory(qc)
 find_package(FLTK CONFIG REQUIRED)
+find_package(SQLite3 REQUIRED)
 
 add_subdirectory(database-wrapper)
 add_executable(uni-books uni-books.cpp)
