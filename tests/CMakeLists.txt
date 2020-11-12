@@ -1,8 +1,8 @@
 set(RUNTIME_OUTPUT_DIRECTORY tests)
 function(ub_add_test target)
     add_executable(${target} ${target}.c)
-    target_link_libraries(${target} PUBLIC qc)
+    target_link_libraries(${target} PUBLIC qc DatabaseWrapper)
     add_test(NAME ${target} COMMAND ${target})
 endfunction()
 
-ub_add_test(ub-empty-test)
+ub_add_test(ub-password-hash-test)
