@@ -1,7 +1,7 @@
 #include <stddef.h>
 #include <sodium/crypto_pwhash_argon2id.h>
 #include <qc.h>
-#include "database-wrapper_impl.h"
+#include "database-wrapper_impl/database-wrapper_impl.h"
 
 static char const* passwords[] = {
         "p@55w01d",
