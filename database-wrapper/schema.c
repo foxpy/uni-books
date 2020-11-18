@@ -5,7 +5,7 @@ char const* schema =
         "    user_id INTEGER PRIMARY KEY,\n"
         "    username TEXT NOT NULL,\n"
         "    password_salt TEXT NOT NULL,\n"
-        "    password_hash TEXT NOT NULL,\n"
+        "    password_hash TEXT NOT NULL\n"
         ");\n"
         "\n"
         "CREATE TABLE People (\n"

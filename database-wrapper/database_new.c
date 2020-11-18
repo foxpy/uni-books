@@ -33,7 +33,13 @@ bool database_new(char const* path, char** err) {
             }
             return false;
         }
-        // TODO: apply schema
+        char* sqlite_error;
+        if (sqlite3_exec(db, schema, NULL, NULL, &sqlite_error) != SQLITE_OK) {
+            qc_err_set(qcerr, "Failed to create schema: %s", sqlite_error);
+            sqlite3_free(sqlite_error);
+            *err = qc_err_to_owned_c_str(qcerr);
+            return false;
+        }
         sqlite3_close(db);
         qc_err_free(qcerr);
         return true;
