@@ -2,6 +2,9 @@
 #include <Fl/Fl_Window.H>
 #include <Fl/Fl_Menu_Bar.H>
 #include <Fl/Fl_Native_File_Chooser.H>
+extern "C" {
+#   include "database-wrapper.h"
+}
 
 const unsigned WINDOW_SIZE_X = 800;
 const unsigned WINDOW_SIZE_Y = 600;
@@ -13,7 +16,12 @@ static void menu_file_new_cb(Fl_Widget*, void*) {
         return;
     }
     char const* picked = file_chooser.filename();
-    fl_message("Attempt to save to \"%s\"", picked);
+    char* err;
+    if (!database_new(picked, &err)) {
+        fl_message("%s", err);
+    } else {
+        fl_message("Created database %s", picked);
+    }
 }
 
 static void menu_file_open_cb(Fl_Widget*, void*) {

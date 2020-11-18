@@ -1,6 +1,6 @@
 #include <stdbool.h>
 #include <sodium/crypto_pwhash_argon2id.h>
-#include "database-wrapper.h"
+#include "../database-wrapper.h"
 
 #define HASH_STR_SIZE (crypto_pwhash_argon2id_STRBYTES)
 
