@@ -2,12 +2,13 @@
 #include <Fl/Fl_Window.H>
 #include <Fl/Fl_Menu_Bar.H>
 #include <Fl/Fl_Native_File_Chooser.H>
+#include <Fl/Fl_Double_Window.H>
 extern "C" {
 #   include "database-wrapper.h"
 }
 
-const unsigned WINDOW_SIZE_X = 800;
-const unsigned WINDOW_SIZE_Y = 600;
+const unsigned WINDOW_SIZE_W = 800;
+const unsigned WINDOW_SIZE_H = 600;
 
 static void menu_file_new_cb(Fl_Widget*, void*) {
     Fl_Native_File_Chooser file_chooser;
@@ -43,14 +44,23 @@ static void menu_help_about_cb(Fl_Widget*, void*) {
     fl_message("There is no help");
 }
 
+struct MainWindow: Fl_Double_Window {
+    MainWindow(int w, int h, char const* t): Fl_Double_Window(w, h, t) {
+        menu_bar = new Fl_Menu_Bar(0, 0, w, 25);
+        menu_bar->add("&File/&New", "^n", menu_file_new_cb);
+        menu_bar->add("&File/&Open", "^o", menu_file_open_cb);
+        menu_bar->add("&File/&Quit", "^q", menu_file_close_cb);
+        menu_bar->add("&Help/&About", "^/", menu_help_about_cb);
+    }
+    ~MainWindow() override {
+        delete menu_bar;
+    }
+    Fl_Menu_Bar* menu_bar;
+};
+
 int main() {
-    Fl_Window auth_window(WINDOW_SIZE_X, WINDOW_SIZE_Y, "Library");
-    Fl_Menu_Bar menu_bar(0, 0, WINDOW_SIZE_X, 25);
-    menu_bar.add("&File/&New", "^n", menu_file_new_cb);
-    menu_bar.add("&File/&Open", "^o", menu_file_open_cb);
-    menu_bar.add("&File/&Quit", "^q", menu_file_close_cb);
-    menu_bar.add("&Help/&About", "^/", menu_help_about_cb);
-    auth_window.end();
-    auth_window.show();
+    MainWindow main_window(WINDOW_SIZE_W, WINDOW_SIZE_H, "Library");
+    main_window.end();
+    main_window.show();
     return Fl::run();
 }
