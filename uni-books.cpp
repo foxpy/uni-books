@@ -34,6 +34,7 @@ struct MainWindow: Fl_Double_Window {
 static void menu_file_new_cb(Fl_Widget*, void*) {
     Fl_Native_File_Chooser file_chooser;
     file_chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+    file_chooser.preset_file("library.db");
     if (file_chooser.show() != 0) {
         return;
     }
