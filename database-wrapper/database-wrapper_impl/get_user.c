@@ -15,6 +15,7 @@ bool get_user(char const* username, sqlite3* db, struct user* user, qc_err* err)
         if ((rc = sqlite3_prepare_v2(db, query, STMT_NULL_TERMINATED, &stmt, NULL)) != SQLITE_OK ||
             (rc = sqlite3_bind_text(stmt, 1, username, STMT_NULL_TERMINATED, SQLITE_TRANSIENT)) != SQLITE_OK) {
             qc_err_set(err, "Failed to get list of users: %s", sqlite3_errstr(rc));
+            sqlite3_finalize(stmt);
             return false;
         }
         unsigned char const* text;
@@ -34,8 +35,7 @@ bool get_user(char const* username, sqlite3* db, struct user* user, qc_err* err)
             sqlite3_finalize(stmt);
             return false;
         }
-        rc = sqlite3_finalize(stmt);
-        assert(rc == SQLITE_OK);
+        sqlite3_finalize(stmt);
         return true;
     }
 }
