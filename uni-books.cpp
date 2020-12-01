@@ -40,9 +40,15 @@ static void menu_file_new_cb(Fl_Widget*, void*) {
     }
     char const* picked = file_chooser.filename();
     char const* admin_password;
-    do {
-        admin_password = fl_input("Admin password");
-    } while (strlen(admin_password) < 8);
+ask_for_password:
+    admin_password = fl_input("Admin password");
+    if (admin_password == nullptr) {
+        return;
+    }
+    if (strlen(admin_password) < 8) {
+        fl_message("Admin password should have at least 8 characters");
+        goto ask_for_password;
+    }
     char* err;
     if (!database_new(picked, &err, admin_password)) {
         fl_message("%s", err);
