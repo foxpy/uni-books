@@ -15,5 +15,5 @@ struct user {
 
 void hash_password(char const *pwd, char hash[static HASH_STR_SIZE]);
 bool check_password(char const* pwd, char hash[static HASH_STR_SIZE]);
-bool get_user(char const* username, sqlite3* db, struct user* user, qc_err* err);
+qc_result get_user(char const* username, sqlite3* db, struct user* user, qc_err* err);
 bool validate_username(char const* username, qc_err* err);
