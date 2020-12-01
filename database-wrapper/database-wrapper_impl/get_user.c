@@ -29,11 +29,11 @@ qc_result get_user(char const* username, sqlite3* db, struct user* user, qc_err*
         assert(rc == SQLITE_ROW);
         text = sqlite3_column_text(stmt, 0);
         assert(sqlite3_column_bytes(stmt, 0) > 0);
-        user->username = emalloc(strlen((char const*) text));
+        user->username = emalloc(strlen((char const*) text) + 1);
         strcpy(user->username, (char const*) text);
         text = sqlite3_column_text(stmt, 1);
         assert(sqlite3_column_bytes(stmt, 1) > 0);
-        user->hash = emalloc(strlen((char const*) text));
+        user->hash = emalloc(strlen((char const*) text) + 1);
         strcpy(user->hash, (char const*) text);
         rc = sqlite3_step(stmt);
         if (rc != SQLITE_DONE) {
