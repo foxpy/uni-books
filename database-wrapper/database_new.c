@@ -6,7 +6,7 @@
 #include <qc/error.h>
 #include "database-wrapper_impl/database-wrapper_impl.h"
 
-static qc_result create_file_if_not_exists(char const* path, qc_err* err) {
+static qc_result touch_file(char const* path, qc_err* err) {
     errno = 0;
     FILE* f = fopen(path, "w+");
     if (f == NULL) {
@@ -20,7 +20,7 @@ static qc_result create_file_if_not_exists(char const* path, qc_err* err) {
 
 bool database_new(char const* path, char** err, char const* admin_password) {
     qc_err* qcerr = qc_err_new();
-    if (create_file_if_not_exists(path, qcerr) == QC_FAILURE) {
+    if (touch_file(path, qcerr) == QC_FAILURE) {
         qc_err_append_front(qcerr, "Failed to create database");
         *err = qc_err_to_owned_c_str(qcerr);
         return false;
