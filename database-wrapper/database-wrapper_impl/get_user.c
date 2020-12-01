@@ -20,11 +20,16 @@ qc_result get_user(char const* username, sqlite3* db, struct user* user, qc_err*
         }
         unsigned char const* text;
         rc = sqlite3_step(stmt);
-        if (rc != SQLITE_ROW) {
+        if (rc == SQLITE_DONE) {
             user->username = NULL;
             user->hash = NULL;
             sqlite3_finalize(stmt);
             return QC_SUCCESS;
+        }
+        if (rc != SQLITE_ROW) {
+            qc_err_set(err, "Failed to get user: %s", sqlite3_errstr(rc));
+            sqlite3_finalize(stmt);
+            return QC_FAILURE;
         }
         assert(rc == SQLITE_ROW);
         text = sqlite3_column_text(stmt, 0);
