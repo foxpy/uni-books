@@ -46,7 +46,7 @@ bool database_new(char const* path, char** err, char const* admin_password) {
         if (wrapper == NULL) {
             return false;
         }
-        if (database_register(wrapper, "admin", admin_password, err) == false) {
+        if (database_register(wrapper, "admin", admin_password, true, err) == false) {
             return false;
         }
         database_close(wrapper);

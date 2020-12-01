@@ -9,8 +9,9 @@
 #define STMT_NULL_TERMINATED (-1)
 
 struct user {
+    bool is_admin;
     char* username;
-    char* hash;
+    char* password_hash;
 };
 
 void hash_password(char const *pwd, char hash[static HASH_STR_SIZE]);

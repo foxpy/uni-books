@@ -32,13 +32,13 @@ int main() {
     result = get_user("admin", conn, &user, qcerr);
     qc_assert_format(result == QC_SUCCESS, "Failed to get user which sure exists in a database: %s", qc_err_get(qcerr));
     qc_assert(strcmp(user.username, username) == 0, "Username does not match");
-    qc_assert(strcmp(user.hash, password_hash) == 0, "Password hash does not match");
+    qc_assert(strcmp(user.password_hash, password_hash) == 0, "Password hash does not match");
     free(user.username);
-    free(user.hash);
+    free(user.password_hash);
     result = get_user("manager", conn, &user, qcerr);
     qc_assert_format(result == QC_SUCCESS, "get_user subroutine has failed: %s", qc_err_get(qcerr));
     qc_assert(user.username == NULL, "Got username for user which sure does not exist");
-    qc_assert(user.hash == NULL, "Got password hash for user which sure does not exist");
+    qc_assert(user.password_hash == NULL, "Got password hash for user which sure does not exist");
     sqlite3_close(conn);
     qc_err_free(qcerr);
 }

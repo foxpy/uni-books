@@ -7,7 +7,7 @@
 #define MIN_PASSWORD_LEN 8
 #define MAX_PASSWORD_LEN 40
 
-bool database_register(db* database, char const* username, char const* password, char** err) {
+bool database_register(db* database, char const* username, char const* password, bool is_admin, char** err) {
     struct user user;
     char hash[HASH_STR_SIZE];
     qc_err* qcerr = qc_err_new();
@@ -31,10 +31,11 @@ bool database_register(db* database, char const* username, char const* password,
     qc_err_free(qcerr);
     hash_password(password, hash);
     sqlite3_stmt* stmt;
-    char const* query = "INSERT INTO Users(username, password_hash) VALUES(?1, ?2);";
+    char const* query = "INSERT INTO Users(is_admin, username, password_hash) VALUES(?1, ?2, ?3);";
     sqlite3_prepare_v2(database->db_file, query, STMT_NULL_TERMINATED, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, username, STMT_NULL_TERMINATED, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, hash, STMT_NULL_TERMINATED, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 1, is_admin);
+    sqlite3_bind_text(stmt, 2, username, STMT_NULL_TERMINATED, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, hash, STMT_NULL_TERMINATED, SQLITE_STATIC);
     assert(sqlite3_step(stmt) == SQLITE_DONE);
     sqlite3_finalize(stmt);
     return true;
