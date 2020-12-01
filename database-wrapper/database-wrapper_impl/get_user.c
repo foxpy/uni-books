@@ -19,6 +19,7 @@ qc_result get_user(char const* username, sqlite3* db, struct user* user, qc_err*
             return QC_FAILURE;
         }
         unsigned char const* text;
+        int is_admin;
         rc = sqlite3_step(stmt);
         if (rc == SQLITE_DONE) {
             user->is_admin = false;
@@ -32,13 +33,13 @@ qc_result get_user(char const* username, sqlite3* db, struct user* user, qc_err*
             sqlite3_finalize(stmt);
             return QC_FAILURE;
         }
-        assert(rc == SQLITE_ROW);
-        text = sqlite3_column_text(stmt, 0);
-        assert(sqlite3_column_bytes(stmt, 0) > 0);
-        user->username = emalloc(strlen((char const*) text) + 1);
-        strcpy(user->username, (char const*) text);
+        user->is_admin = sqlite3_column_int(stmt, 0);
         text = sqlite3_column_text(stmt, 1);
         assert(sqlite3_column_bytes(stmt, 1) > 0);
+        user->username = emalloc(strlen((char const*) text) + 1);
+        strcpy(user->username, (char const*) text);
+        text = sqlite3_column_text(stmt, 2);
+        assert(sqlite3_column_bytes(stmt, 2) > 0);
         user->password_hash = emalloc(strlen((char const*) text) + 1);
         strcpy(user->password_hash, (char const*) text);
         rc = sqlite3_step(stmt);

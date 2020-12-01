@@ -2,8 +2,6 @@
 #include <sqlite3.h>
 #include <stdbool.h>
 
-extern char const* schema;
-
 typedef struct database {
     sqlite3* db_file;
 } db;

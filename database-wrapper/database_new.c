@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <string.h>
 #include <qc/error.h>
-#include "database-wrapper.h"
+#include "database-wrapper_impl/database-wrapper_impl.h"
 
 static qc_result create_file_if_not_exists(char const* path, qc_err* err) {
     errno = 0;

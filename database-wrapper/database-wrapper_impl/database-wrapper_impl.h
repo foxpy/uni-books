@@ -8,6 +8,8 @@
 #define HASH_STR_SIZE (crypto_pwhash_argon2id_STRBYTES)
 #define STMT_NULL_TERMINATED (-1)
 
+extern char const* schema;
+
 struct user {
     bool is_admin;
     char* username;

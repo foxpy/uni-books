@@ -6,8 +6,7 @@
 static char const* username = "admin";
 static char const* password_hash = "Some long n scary hash string";
 
-static void add_test_user(sqlite3* db) {
-    static char const* query = "INSERT INTO Users(username, password_hash) VALUES(?1, ?2);";
+static void add_test_user(sqlite3* db) {static char const* query = "INSERT INTO Users(is_admin, username, password_hash) VALUES(TRUE, ?1, ?2);";
     sqlite3_stmt* stmt;
     sqlite3_prepare_v2(db, query, STMT_NULL_TERMINATED, &stmt, NULL);
     sqlite3_bind_text(stmt, 1, username, STMT_NULL_TERMINATED, SQLITE_STATIC);
