@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <assert.h>
 #include <string.h>
 #include <qc.h>
 #include "database-wrapper_impl/database-wrapper_impl.h"
@@ -14,7 +15,7 @@ bool database_register(db* database, char const* username, char const* password,
         qc_err_append_front(qcerr, "Invalid username");
         *err = qc_err_to_owned_c_str(qcerr);
         return false;
-    } else if (!get_user(username, database->db_file, &user, qcerr)) {
+    } else if (get_user(username, database->db_file, &user, qcerr) == QC_SUCCESS && user.username != NULL) {
         qc_err_set(qcerr, "Username %s is already taken", username);
         *err = qc_err_to_owned_c_str(qcerr);
         return false;
@@ -27,7 +28,14 @@ bool database_register(db* database, char const* username, char const* password,
         *err = qc_err_to_owned_c_str(qcerr);
         return false;
     }
-    hash_password(password, hash);
-    // TODO: register user
     qc_err_free(qcerr);
+    hash_password(password, hash);
+    sqlite3_stmt* stmt;
+    char const* query = "INSERT INTO Users(username, password_hash) VALUES(?1, ?2);";
+    sqlite3_prepare_v2(database->db_file, query, STMT_NULL_TERMINATED, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, username, STMT_NULL_TERMINATED, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, hash, STMT_NULL_TERMINATED, SQLITE_STATIC);
+    assert(sqlite3_step(stmt) == SQLITE_DONE);
+    sqlite3_finalize(stmt);
+    return true;
 }
