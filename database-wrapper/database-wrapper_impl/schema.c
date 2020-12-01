@@ -1,10 +1,7 @@
-#include "database-wrapper.h"
-
 char const* schema =
         "CREATE TABLE Users (\n"
         "    user_id INTEGER PRIMARY KEY,\n"
-        "    username TEXT NOT NULL,\n"
-        "    password_salt TEXT NOT NULL,\n"
+        "    username TEXT NOT NULL UNIQUE,\n"
         "    password_hash TEXT NOT NULL\n"
         ");\n"
         "\n"

@@ -6,3 +6,5 @@ function(ub_add_test target)
 endfunction()
 
 ub_add_test(ub-password-hash-test)
+ub_add_test(ub-validate-username-test)
+ub_add_test(ub-get-user-test)

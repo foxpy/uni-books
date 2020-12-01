@@ -18,30 +18,38 @@ static qc_result create_file_if_not_exists(char const* path, qc_err* err) {
     }
 }
 
-bool database_new(char const* path, char** err) {
+bool database_new(char const* path, char** err, char const* admin_password) {
     qc_err* qcerr = qc_err_new();
     if (create_file_if_not_exists(path, qcerr) == QC_FAILURE) {
         qc_err_append_front(qcerr, "Failed to create database");
         *err = qc_err_to_owned_c_str(qcerr);
         return false;
     } else {
-        sqlite3* db;
-        if (sqlite3_open(path, &db) != SQLITE_OK) {
-            qc_err_set(qcerr, "Failed to create database %s: %s", path, sqlite3_errmsg(db));
-            if (db != NULL) {
-                sqlite3_close(db);
+        sqlite3* conn;
+        if (sqlite3_open(path, &conn) != SQLITE_OK) {
+            qc_err_set(qcerr, "Failed to create database %s: %s", path, sqlite3_errmsg(conn));
+            if (conn != NULL) {
+                sqlite3_close(conn);
             }
             return false;
         }
         char* sqlite_error;
-        if (sqlite3_exec(db, schema, NULL, NULL, &sqlite_error) != SQLITE_OK) {
+        if (sqlite3_exec(conn, schema, NULL, NULL, &sqlite_error) != SQLITE_OK) {
             qc_err_set(qcerr, "Failed to create schema: %s", sqlite_error);
             sqlite3_free(sqlite_error);
             *err = qc_err_to_owned_c_str(qcerr);
             return false;
         }
-        sqlite3_close(db);
+        sqlite3_close(conn);
         qc_err_free(qcerr);
+        db* wrapper = database_open(path, err);
+        if (wrapper == NULL) {
+            return false;
+        }
+        if (database_register(wrapper, "admin", admin_password, err) == false) {
+            return false;
+        }
+        database_close(wrapper);
         return true;
     }
 }

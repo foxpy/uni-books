@@ -39,8 +39,12 @@ static void menu_file_new_cb(Fl_Widget*, void*) {
         return;
     }
     char const* picked = file_chooser.filename();
+    char const* admin_password;
+    do {
+        admin_password = fl_input("Admin password");
+    } while (strlen(admin_password) < 8);
     char* err;
-    if (!database_new(picked, &err)) {
+    if (!database_new(picked, &err, admin_password)) {
         fl_message("%s", err);
     } else {
         fl_message("Created database %s", picked);
