@@ -3,6 +3,7 @@ add_library(DatabaseWrapper
     database_open.c
     database_close.c
     database_register.c
+    database_check_credentials.c
     database-wrapper_impl/schema.c
     database-wrapper_impl/hash_password.c
     database-wrapper_impl/check_password.c
