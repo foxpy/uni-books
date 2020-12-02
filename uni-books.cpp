@@ -112,6 +112,7 @@ ask_for_password:
         fl_message("Failed to open database: %s", err);
         free(err);
     }
+    main_window->login_widget->show();
 }
 
 static void menu_file_open_cb(Fl_Widget* w, void* m) {
