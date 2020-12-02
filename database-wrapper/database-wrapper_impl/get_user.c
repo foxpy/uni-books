@@ -19,7 +19,6 @@ qc_result get_user(char const* username, sqlite3* db, struct user* user, qc_err*
             return QC_FAILURE;
         }
         unsigned char const* text;
-        int is_admin;
         rc = sqlite3_step(stmt);
         if (rc == SQLITE_DONE) {
             user->is_admin = false;
