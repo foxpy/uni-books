@@ -41,7 +41,7 @@ void authorize_cb(Fl_Widget*, void* l) {
     auto login_widget = reinterpret_cast<LoginWidget*>(l);
     char const* username = login_widget->username_input->value();
     char const* password = login_widget->password_input->value();
-    if (username != nullptr && password != nullptr) {
+    if (strlen(username) > 0 && strlen(password) > 0) {
         char* err = nullptr;
         db_user_type type = database_check_credentials(
                 login_widget->main_window->database_handle, username, password, &err);
