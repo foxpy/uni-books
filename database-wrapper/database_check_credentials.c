@@ -7,6 +7,9 @@ db_user_type database_check_credentials(db* database, char const* username, char
     if (get_user(username, database->db_file, &user, qcerr) == QC_FAILURE) {
         *err = qc_err_to_owned_c_str(qcerr);
         return DATABASE_UNAUTHORIZED;
+    } else if (user.username == NULL) {
+        *err = sprintf_alloc("This user does not exist");
+        return DATABASE_UNAUTHORIZED;
     } else if (!check_password(password, user.password_hash)) {
         *err = sprintf_alloc("Wrong password");
         return DATABASE_UNAUTHORIZED;
