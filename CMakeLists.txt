@@ -16,8 +16,7 @@ find_package(SQLite3 REQUIRED)
 find_package(unofficial-sodium CONFIG REQUIRED)
 
 add_subdirectory(database-wrapper)
-add_executable(uni-books uni-books.cpp)
-target_link_libraries(uni-books PUBLIC fltk DatabaseWrapper)
+add_subdirectory(gui)
 
 option(UB_TESTS "Build tests" OFF)
 if(UB_TESTS)
