@@ -15,6 +15,7 @@ MainWindow::MainWindow(int w, int h, char const* t): Fl_Double_Window(w, h, t) {
 MainWindow::~MainWindow() {
     delete menu_bar;
     delete login_widget;
+    menu_file_close_cb(nullptr, this);
 }
 
 void menu_file_new_cb(Fl_Widget*, void* m) {
