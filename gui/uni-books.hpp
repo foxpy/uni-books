@@ -15,6 +15,7 @@ extern "C" {
 
 struct MainWindow;
 struct LoginWidget;
+struct AdminPanel;
 
 void menu_file_new_cb(Fl_Widget*, void*);
 void menu_file_open_cb(Fl_Widget*, void*);
@@ -22,6 +23,15 @@ void menu_file_close_cb(Fl_Widget*, void*);
 void menu_file_quit_cb(Fl_Widget*, void*);
 void menu_help_about_cb(Fl_Widget*, void*);
 void authorize_cb(Fl_Widget*, void*);
+
+struct MainWindow: Fl_Double_Window {
+    MainWindow(int w, int h, char const* t);
+    ~MainWindow() override;
+    db* database_handle;
+    Fl_Menu_Bar* menu_bar;
+    LoginWidget* login_widget;
+    AdminPanel* admin_panel;
+};
 
 struct LoginWidget: Fl_Widget {
     LoginWidget(int x, int y, MainWindow* m);
@@ -37,10 +47,12 @@ struct LoginWidget: Fl_Widget {
     Fl_Button* authorize_button;
 };
 
-struct MainWindow: Fl_Double_Window {
-    MainWindow(int w, int h, char const* t);
-    ~MainWindow() override;
-    db* database_handle;
-    Fl_Menu_Bar* menu_bar;
-    LoginWidget* login_widget;
+struct AdminPanel: Fl_Widget {
+    AdminPanel(int x, int y, MainWindow* m);
+    ~AdminPanel() override;
+    void draw() override;
+    void hide() override;
+    void show() override;
+    MainWindow* main_window;
+    Fl_Box* box;
 };

@@ -10,11 +10,14 @@ MainWindow::MainWindow(int w, int h, char const* t): Fl_Double_Window(w, h, t) {
     menu_bar->add("&Help/&About", "^/", menu_help_about_cb, this);
     login_widget = new LoginWidget(200, 200, this);
     login_widget->hide();
+    admin_panel = new AdminPanel(50, 50, this);
+    admin_panel->hide();
 }
 
 MainWindow::~MainWindow() {
     delete menu_bar;
     delete login_widget;
+    delete admin_panel;
     menu_file_close_cb(nullptr, this);
 }
 
@@ -76,6 +79,7 @@ void menu_file_close_cb(Fl_Widget*, void* m) {
         main_window->database_handle = nullptr;
     }
     main_window->login_widget->hide();
+    main_window->admin_panel->hide();
 }
 
 void menu_file_quit_cb(Fl_Widget* w, void* m) {

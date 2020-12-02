@@ -2,5 +2,6 @@ add_executable(uni-books
     main.cpp
     login-widget.cpp
     main-window.cpp
+    admin-panel.cpp
 )
 target_link_libraries(uni-books PUBLIC fltk DatabaseWrapper)

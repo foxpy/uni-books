@@ -49,7 +49,13 @@ void authorize_cb(Fl_Widget*, void* l) {
             fl_message("Failed to authorize: %s", err);
             free(err);
         } else {
-            fl_message("Successfully authorized as %s", type == DATABASE_ADMIN ? "admin" : "casual user");
+            login_widget->hide();
+            if (type == DATABASE_ADMIN) {
+                fl_message("Successfully authorized as admin");
+                login_widget->main_window->admin_panel->show();
+            } else {
+                fl_message("Successfully authorized as casual user");
+            }
         }
     }
 }
