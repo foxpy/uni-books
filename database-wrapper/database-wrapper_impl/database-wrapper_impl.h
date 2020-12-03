@@ -10,12 +10,6 @@
 
 extern char const* schema;
 
-struct user {
-    bool is_admin;
-    char* username;
-    char* password_hash;
-};
-
 void hash_password(char const *pwd, char hash[static HASH_STR_SIZE]);
 bool check_password(char const* pwd, char hash[static HASH_STR_SIZE]);
 qc_result get_user(char const* username, sqlite3* db, struct user* user, qc_err* err);
