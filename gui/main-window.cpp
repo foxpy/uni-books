@@ -1,5 +1,12 @@
 #include "uni-books.hpp"
 
+static void close_database_handle(db** database) {
+    if (*database != nullptr) {
+        database_close(*database);
+        *database = nullptr;
+    }
+}
+
 MainWindow::MainWindow(int w, int h, char const* t): Fl_Double_Window(w, h, t) {
     database_handle = nullptr;
     menu_bar = new Fl_Menu_Bar(0, 0, w, 25);
@@ -18,7 +25,7 @@ MainWindow::~MainWindow() {
     delete menu_bar;
     delete login_widget;
     delete admin_panel;
-    menu_file_close_cb(nullptr, this);
+    close_database_handle(&database_handle);
 }
 
 void menu_file_new_cb(Fl_Widget*, void* m) {
@@ -74,10 +81,7 @@ void menu_file_open_cb(Fl_Widget* w, void* m) {
 
 void menu_file_close_cb(Fl_Widget*, void* m) {
     auto* main_window = reinterpret_cast<MainWindow*>(m);
-    if (main_window->database_handle != nullptr) {
-        database_close(main_window->database_handle);
-        main_window->database_handle = nullptr;
-    }
+    close_database_handle(&main_window->database_handle);
     main_window->login_widget->hide();
     main_window->admin_panel->hide();
 }
