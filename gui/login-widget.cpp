@@ -53,6 +53,7 @@ void authorize_cb(Fl_Widget*, void* l) {
             if (type == DATABASE_ADMIN) {
                 fl_message("Successfully authorized as admin");
                 login_widget->main_window->admin_panel->show();
+                login_widget->main_window->admin_panel->table->populate();
             } else {
                 fl_message("Successfully authorized as casual user");
             }

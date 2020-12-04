@@ -6,6 +6,8 @@
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Table.H>
+#include <FL/fl_draw.H>
 #include <FL/Fl_Native_File_Chooser.H>
 #include <FL/Fl_Double_Window.H>
 
@@ -16,6 +18,7 @@ extern "C" {
 struct MainWindow;
 struct LoginWidget;
 struct AdminPanel;
+struct UsersTable;
 
 void menu_file_new_cb(Fl_Widget*, void*);
 void menu_file_open_cb(Fl_Widget*, void*);
@@ -55,4 +58,18 @@ struct AdminPanel: Fl_Widget {
     void show() override;
     MainWindow* main_window;
     Fl_Box* box;
+    UsersTable* table;
+};
+
+struct UsersTable: Fl_Table {
+    UsersTable(int x, int y, MainWindow* m);
+    ~UsersTable();
+    void DrawHeader(char const* s, int X, int Y, int W, int H);
+    void DrawData(char const* s, int X, int Y, int W, int H);
+    void draw_cell(TableContext context, int ROW=0, int COL=0, int X=0, int Y=0, int W=0, int H=0);
+    void populate();
+    void clear_users();
+    MainWindow* main_window;
+    size_t users_count;
+    struct user* users;
 };
