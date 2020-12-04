@@ -6,7 +6,7 @@ LoginWidget::LoginWidget(int x, int y, MainWindow* m): Fl_Widget(x, y, 400, 200)
     box->box(FL_UP_BOX);
     label = new Fl_Box(x+20, y+20, 360, 20, "Log in");
     username_input = new Fl_Input(x+80, y+40, 300, 40, "Username");
-    password_input = new Fl_Input(x+80, y+100, 300, 40, "Password");
+    password_input = new Fl_Secret_Input(x+80, y+100, 300, 40, "Password");
     authorize_button = new Fl_Button(x+150, y+150, 100, 40, "Authorize");
     authorize_button->callback(authorize_cb, this);
 }

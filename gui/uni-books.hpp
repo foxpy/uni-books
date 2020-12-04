@@ -4,6 +4,8 @@
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Input.H>
+#include <FL/Fl_Secret_Input.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Table.H>
@@ -48,7 +50,7 @@ struct LoginWidget: Fl_Widget {
     Fl_Box* box;
     Fl_Box* label;
     Fl_Input* username_input;
-    Fl_Input* password_input;
+    Fl_Secret_Input* password_input;
     Fl_Button* authorize_button;
 };
 
