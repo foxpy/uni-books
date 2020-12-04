@@ -115,8 +115,6 @@ void UsersTable::populate() {
         fl_message("Failed to load users: %s", err);
         free(err);
         return;
-    } else if (num_users == 0) {
-        return;
     } else {
         this->users_count = num_users;
         rows(num_users);

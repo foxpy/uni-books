@@ -5,11 +5,17 @@ UserPanel::UserPanel(int x, int y, MainWindow *m): Fl_Widget(x, y, 700, 500) {
     box = new Fl_Box(x, y, 700, 500);
     table = new BooksTable(x, y, main_window);
     box->box(FL_UP_BOX);
+    new_book_button = new Fl_Button(x + 500, y + 460, 200, 40, "New book");
+    new_book_button->callback(new_book_cb, main_window);
+    delete_book_button = new Fl_Button(x + 300, y + 460, 200, 40, "Delete book");
+    delete_book_button->callback(delete_book_cb, main_window);
 }
 
 UserPanel::~UserPanel() {
     delete box;
     delete table;
+    delete new_book_button;
+    delete delete_book_button;
 }
 
 void UserPanel::draw() {}
@@ -17,11 +23,15 @@ void UserPanel::draw() {}
 void UserPanel::hide() {
     box->hide();
     table->hide();
+    new_book_button->hide();
+    delete_book_button->hide();
 }
 
 void UserPanel::show() {
     box->show();
     table->show();
+    new_book_button->show();
+    delete_book_button->show();
 }
 
 BooksTable::BooksTable(int x, int y, MainWindow *m): Fl_Table(x, y, 700, 460) {
@@ -94,8 +104,6 @@ void BooksTable::populate() {
         fl_message("Failed to load books: %s", err);
         free(err);
         return;
-    } else if (num_books == 0) {
-        return;
     } else {
         this->books_count = num_books;
         rows(num_books);
@@ -117,5 +125,53 @@ void BooksTable::clear_books() {
         }
         free(books);
         books = nullptr;
+    }
+}
+
+void new_book_cb(Fl_Widget*, void* m) {
+    char bookname[81];
+    char author[81];
+    auto main_window = reinterpret_cast<MainWindow *>(m);
+    char const *input_text;
+    {
+        input_text = fl_input("Book name");
+        if (input_text == nullptr) {
+            return;
+        } else if (strlen(input_text) > 80) {
+            fl_message("Book name too long!");
+            return;
+        }
+        strcpy(bookname, input_text);
+        input_text = fl_input("Book author");
+        if (input_text == nullptr) {
+            return;
+        } else if (strlen(input_text) > 80) {
+            fl_message("Book author too long!");
+            return;
+        }
+        strcpy(author, input_text);
+    }
+    {
+        char* err;
+        if (!database_add_book(main_window->database_handle, bookname, author, &err)) {
+            fl_message("Failed to add book %s: %s", bookname, err);
+            free(err);
+        }
+    }
+    main_window->user_panel->table->populate();
+}
+
+void delete_book_cb(Fl_Widget*, void* m) {
+    auto main_window = reinterpret_cast<MainWindow*>(m);
+    char const* bookname = fl_input("Book name to delete");
+    if (bookname == nullptr) {
+        return;
+    } else {
+        char* err;
+        if (!database_delete_book(main_window->database_handle, bookname, &err)) {
+            fl_message("Failed to delete book %s: %s", bookname, err);
+            free(err);
+        }
+        main_window->user_panel->table->populate();
     }
 }

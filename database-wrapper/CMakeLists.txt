@@ -7,6 +7,8 @@ add_library(DatabaseWrapper
     database_get_users.c
     database_delete_user.c
     database_get_books.c
+    database_delete_book.c
+    database_add_book.c
     database-wrapper_impl/schema.c
     database-wrapper_impl/hash_password.c
     database-wrapper_impl/check_password.c

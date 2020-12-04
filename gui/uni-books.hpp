@@ -32,6 +32,8 @@ void menu_help_about_cb(Fl_Widget*, void*);
 void authorize_cb(Fl_Widget*, void*);
 void new_user_cb(Fl_Widget*, void*);
 void delete_user_cb(Fl_Widget*, void*);
+void new_book_cb(Fl_Widget*, void*);
+void delete_book_cb(Fl_Widget*, void*);
 
 struct MainWindow: Fl_Double_Window {
     MainWindow(int w, int h, char const* t);
@@ -92,6 +94,8 @@ struct UserPanel: Fl_Widget {
     MainWindow* main_window;
     Fl_Box* box;
     BooksTable* table;
+    Fl_Button* new_book_button;
+    Fl_Button* delete_book_button;
 };
 
 struct BooksTable: Fl_Table {
