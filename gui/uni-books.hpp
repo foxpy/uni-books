@@ -22,6 +22,7 @@ struct LoginWidget;
 struct AdminPanel;
 struct UsersTable;
 struct UserPanel;
+struct BooksTable;
 
 void menu_file_new_cb(Fl_Widget*, void*);
 void menu_file_open_cb(Fl_Widget*, void*);
@@ -74,7 +75,7 @@ struct UsersTable: Fl_Table {
     ~UsersTable();
     void DrawHeader(char const* s, int X, int Y, int W, int H);
     void DrawData(char const* s, int X, int Y, int W, int H);
-    void draw_cell(TableContext context, int ROW=0, int COL=0, int X=0, int Y=0, int W=0, int H=0);
+    void draw_cell(TableContext context, int ROW=0, int COL=0, int X=0, int Y=0, int W=0, int H=0) override;
     void populate();
     void clear_users();
     MainWindow* main_window;
@@ -90,4 +91,18 @@ struct UserPanel: Fl_Widget {
     void show() override;
     MainWindow* main_window;
     Fl_Box* box;
+    BooksTable* table;
+};
+
+struct BooksTable: Fl_Table {
+    BooksTable(int x, int y, MainWindow* m);
+    ~BooksTable() override;
+    void DrawHeader(char const* s, int X, int Y, int W, int H);
+    void DrawData(char const* s, int X, int Y, int W, int H);
+    void draw_cell(TableContext context, int ROW=0, int COL=0, int X=0, int Y=0, int W=0, int H=0) override;
+    void populate();
+    void clear_books();
+    MainWindow* main_window;
+    size_t books_count;
+    struct book* books;
 };

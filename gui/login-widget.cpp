@@ -57,6 +57,7 @@ void authorize_cb(Fl_Widget*, void* l) {
             } else {
                 fl_message("Successfully authorized as user");
                 login_widget->main_window->user_panel->show();
+                login_widget->main_window->user_panel->table->populate();
             }
         }
     }

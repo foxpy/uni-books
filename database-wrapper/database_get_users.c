@@ -1,5 +1,4 @@
 #include <stddef.h>
-#include <assert.h>
 #include "database-wrapper_impl/database-wrapper_impl.h"
 
 static ptrdiff_t get_users_count(sqlite3* conn, char** err) {
@@ -18,10 +17,10 @@ static ptrdiff_t get_users_count(sqlite3* conn, char** err) {
 }
 
 ptrdiff_t database_get_users(db* database, struct user** dst, char** err) {
-    sqlite3_stmt *stmt;
+    sqlite3_stmt* stmt;
     {
         int rc;
-        char const *query = "SELECT is_admin, username, password_hash FROM Users;";
+        char const* query = "SELECT is_admin, username, password_hash FROM Users;";
         if ((rc = sqlite3_prepare_v2(database->db_file, query, STMT_NULL_TERMINATED, &stmt, NULL)) != SQLITE_OK) {
             *err = sprintf_alloc("Failed to get list of users: %s", sqlite3_errstr(rc));
             sqlite3_finalize(stmt);
@@ -47,7 +46,6 @@ ptrdiff_t database_get_users(db* database, struct user** dst, char** err) {
             users[i].username = sprintf_alloc("%s", username);
             users[i].password_hash = sprintf_alloc("%s", password_hash);
         }
-        assert(sqlite3_step(stmt) == SQLITE_DONE);
         sqlite3_finalize(stmt);
         return num_users;
     }

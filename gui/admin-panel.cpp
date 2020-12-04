@@ -99,8 +99,8 @@ void UsersTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y,
 void UsersTable::clear_users() {
     if (users != nullptr) {
         for (size_t i = 0; i < users_count; ++i) {
-            free (users[i].username);
-            free (users[i].password_hash);
+            free(users[i].username);
+            free(users[i].password_hash);
         }
         free(users);
         users = nullptr;
