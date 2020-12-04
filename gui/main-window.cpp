@@ -76,6 +76,8 @@ void menu_file_open_cb(Fl_Widget* w, void* m) {
         fl_message("Failed to open database: %s", err);
         free(err);
     }
+    main_window->login_widget->username_input->value("");
+    main_window->login_widget->password_input->value("");
     main_window->login_widget->show();
 }
 
