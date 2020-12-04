@@ -55,7 +55,8 @@ void authorize_cb(Fl_Widget*, void* l) {
                 login_widget->main_window->admin_panel->show();
                 login_widget->main_window->admin_panel->table->populate();
             } else {
-                fl_message("Successfully authorized as casual user");
+                fl_message("Successfully authorized as user");
+                login_widget->main_window->user_panel->show();
             }
         }
     }

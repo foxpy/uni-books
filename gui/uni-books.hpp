@@ -21,6 +21,7 @@ struct MainWindow;
 struct LoginWidget;
 struct AdminPanel;
 struct UsersTable;
+struct UserPanel;
 
 void menu_file_new_cb(Fl_Widget*, void*);
 void menu_file_open_cb(Fl_Widget*, void*);
@@ -38,6 +39,7 @@ struct MainWindow: Fl_Double_Window {
     Fl_Menu_Bar* menu_bar;
     LoginWidget* login_widget;
     AdminPanel* admin_panel;
+    UserPanel* user_panel;
 };
 
 struct LoginWidget: Fl_Widget {
@@ -78,4 +80,14 @@ struct UsersTable: Fl_Table {
     MainWindow* main_window;
     size_t users_count;
     struct user* users;
+};
+
+struct UserPanel: Fl_Widget {
+    UserPanel(int x, int y, MainWindow* m);
+    ~UserPanel() override;
+    void draw() override;
+    void hide() override;
+    void show() override;
+    MainWindow* main_window;
+    Fl_Box* box;
 };

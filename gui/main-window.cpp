@@ -19,12 +19,15 @@ MainWindow::MainWindow(int w, int h, char const* t): Fl_Double_Window(w, h, t) {
     login_widget->hide();
     admin_panel = new AdminPanel(50, 50, this);
     admin_panel->hide();
+    user_panel = new UserPanel(50, 50, this);
+    user_panel->hide();
 }
 
 MainWindow::~MainWindow() {
     delete menu_bar;
     delete login_widget;
     delete admin_panel;
+    delete user_panel;
     close_database_handle(&database_handle);
 }
 
@@ -86,6 +89,7 @@ void menu_file_close_cb(Fl_Widget*, void* m) {
     close_database_handle(&main_window->database_handle);
     main_window->login_widget->hide();
     main_window->admin_panel->hide();
+    main_window->user_panel->hide();
 }
 
 void menu_file_quit_cb(Fl_Widget* w, void* m) {

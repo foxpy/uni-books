@@ -38,6 +38,7 @@ UsersTable::UsersTable(int x, int y, MainWindow* m): Fl_Table(x, y, 700, 460) {
     main_window = m;
     users_count = 0;
     users = nullptr;
+    end();
 }
 
 UsersTable::~UsersTable() {
@@ -126,7 +127,6 @@ void UsersTable::populate() {
         col_header(1);
         col_width_all(200);
         col_resize(1);
-        end();
     }
 }
 
