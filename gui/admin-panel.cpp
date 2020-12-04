@@ -110,11 +110,11 @@ void UsersTable::populate() {
         this->users_count = num_users;
         rows(num_users);
         row_header(0);
-        row_height_all(20);
+        row_height_all(30);
         row_resize(1);
         cols(2);
         col_header(1);
-        col_width_all(80);
+        col_width_all(200);
         col_resize(1);
         end();
     }
