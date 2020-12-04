@@ -3,12 +3,17 @@
 AdminPanel::AdminPanel(int x, int y, MainWindow* m): Fl_Widget(x, y, 700, 500) {
     main_window = m;
     box = new Fl_Box(x, y, 700, 500);
+    new_user_button = new Fl_Button(x + 500, y + 460, 200, 40, "New user");
+    new_user_button->callback(new_user_cb, main_window);
+    delete_user_button = new Fl_Button(x + 300, y + 460, 200, 40, "Delete user");
     table = new UsersTable(x, y, main_window);
     box->box(FL_UP_BOX);
 }
 
 AdminPanel::~AdminPanel() {
     delete box;
+    delete new_user_button;
+    delete delete_user_button;
     delete table;
 }
 
@@ -16,11 +21,15 @@ void AdminPanel::draw() {}
 
 void AdminPanel::hide() {
     box->hide();
+    new_user_button->hide();
+    delete_user_button->hide();
     table->hide();
 }
 
 void AdminPanel::show() {
     box->show();
+    new_user_button->show();
+    delete_user_button->show();
     table->show();
 }
 
@@ -117,5 +126,43 @@ void UsersTable::populate() {
         col_width_all(200);
         col_resize(1);
         end();
+    }
+}
+
+void new_user_cb(Fl_Widget*, void* m) {
+    auto main_window = reinterpret_cast<MainWindow*>(m);
+    char username[41];
+    char password[41];
+    char const* input_str;
+    ask_username:
+    input_str = fl_input("Name");
+    if (input_str == nullptr) {
+        return;
+    } else if (strlen(input_str) < 3) {
+        fl_message("User name too short!");
+        goto ask_username;
+    } else if (strlen(input_str) > 40) {
+        fl_message("User name too long!");
+        goto ask_username;
+    }
+    strcpy(username, input_str);
+    ask_password:
+    input_str = fl_input("Password");
+    if (input_str == nullptr) {
+        return;
+    } else if (strlen(input_str) < 8) {
+        fl_message("Password too short!");
+        goto ask_password;
+    } else if (strlen(input_str) > 40) {
+        fl_message("Password too long!");
+        goto ask_password;
+    }
+    strcpy(password, input_str);
+    char* err;
+    if (!database_register(main_window->database_handle, username, password, false, &err)) {
+        fl_message("Failed to register new user: %s", err);
+        free(err);
+    } else {
+        main_window->admin_panel->table->populate();
     }
 }

@@ -26,6 +26,8 @@ void menu_file_close_cb(Fl_Widget*, void*);
 void menu_file_quit_cb(Fl_Widget*, void*);
 void menu_help_about_cb(Fl_Widget*, void*);
 void authorize_cb(Fl_Widget*, void*);
+void new_user_cb(Fl_Widget*, void*);
+void delete_user_cb(Fl_Widget*, void*);
 
 struct MainWindow: Fl_Double_Window {
     MainWindow(int w, int h, char const* t);
@@ -59,6 +61,8 @@ struct AdminPanel: Fl_Widget {
     MainWindow* main_window;
     Fl_Box* box;
     UsersTable* table;
+    Fl_Button* new_user_button;
+    Fl_Button* delete_user_button;
 };
 
 struct UsersTable: Fl_Table {
