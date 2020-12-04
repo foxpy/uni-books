@@ -26,3 +26,4 @@ void database_close(db* database);
 bool database_register(db* database, char const* username, char const* password, bool is_admin, char** err);
 db_user_type database_check_credentials(db* database, char const* username, char const* password, char** err);
 ptrdiff_t database_get_users(db* database, struct user** dst, char** err);
+bool database_delete_user(db* database, char const* username, char** err);

@@ -6,6 +6,7 @@ AdminPanel::AdminPanel(int x, int y, MainWindow* m): Fl_Widget(x, y, 700, 500) {
     new_user_button = new Fl_Button(x + 500, y + 460, 200, 40, "New user");
     new_user_button->callback(new_user_cb, main_window);
     delete_user_button = new Fl_Button(x + 300, y + 460, 200, 40, "Delete user");
+    delete_user_button->callback(delete_user_cb, main_window);
     table = new UsersTable(x, y, main_window);
     box->box(FL_UP_BOX);
 }
@@ -163,6 +164,21 @@ void new_user_cb(Fl_Widget*, void* m) {
         fl_message("Failed to register new user: %s", err);
         free(err);
     } else {
+        main_window->admin_panel->table->populate();
+    }
+}
+
+void delete_user_cb(Fl_Widget*, void* m) {
+    auto main_window = reinterpret_cast<MainWindow*>(m);
+    char const* username = fl_input("Name");
+    if (username == nullptr) {
+        return;
+    } else {
+        char* err;
+        if (!database_delete_user(main_window->database_handle, username, &err)) {
+            fl_message("Failed to delete user %s: %s", username, err);
+            free(err);
+        }
         main_window->admin_panel->table->populate();
     }
 }
