@@ -1,5 +1,4 @@
 #include <stdbool.h>
-#include <assert.h>
 #include <string.h>
 #include <qc.h>
 #include "database-wrapper_impl/database-wrapper_impl.h"
@@ -36,7 +35,7 @@ bool database_register(db* database, char const* username, char const* password,
     sqlite3_bind_int(stmt, 1, is_admin);
     sqlite3_bind_text(stmt, 2, username, STMT_NULL_TERMINATED, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 3, hash, STMT_NULL_TERMINATED, SQLITE_STATIC);
-    assert(sqlite3_step(stmt) == SQLITE_DONE);
+    sqlite3_step(stmt);
     sqlite3_finalize(stmt);
     return true;
 }
