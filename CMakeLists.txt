@@ -4,7 +4,7 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-project(UniBooks)
+project(UniGames)
 add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 if(NOT MSVC)
     add_compile_options(-Wall -Wextra -Wpedantic)

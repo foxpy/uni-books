@@ -22,8 +22,8 @@ struct LoginWidget;
 struct AdminPanel;
 struct UsersTable;
 struct UserPanel;
-struct BooksTable;
-struct RestoreBooksTable;
+struct GamesTable;
+struct RestoreGamesTable;
 
 void menu_file_new_cb(Fl_Widget*, void*);
 void menu_file_open_cb(Fl_Widget*, void*);
@@ -33,11 +33,11 @@ void menu_help_about_cb(Fl_Widget*, void*);
 void authorize_cb(Fl_Widget*, void*);
 void new_user_cb(Fl_Widget*, void*);
 void delete_user_cb(Fl_Widget*, void*);
-void new_book_cb(Fl_Widget*, void*);
-void delete_book_cb(Fl_Widget*, void*);
-void restore_books_button_cb(Fl_Widget*, void*);
+void new_game_cb(Fl_Widget*, void*);
+void delete_game_cb(Fl_Widget*, void*);
+void restore_games_button_cb(Fl_Widget*, void*);
 void go_back_button_cb(Fl_Widget*, void*);
-void restore_book_button_cb(Fl_Widget*, void*);
+void restore_game_button_cb(Fl_Widget*, void*);
 
 struct MainWindow: Fl_Double_Window {
     MainWindow(int w, int h, char const* t);
@@ -97,37 +97,37 @@ struct UserPanel: Fl_Widget {
     void show() override;
     MainWindow* main_window;
     Fl_Box* box;
-    BooksTable* table;
-    RestoreBooksTable* restore_table;
-    Fl_Button* restore_books_button;
+    GamesTable* table;
+    RestoreGamesTable* restore_table;
+    Fl_Button* restore_games_button;
     Fl_Button* go_back_button;
-    Fl_Button* restore_book_button;
-    Fl_Button* new_book_button;
-    Fl_Button* delete_book_button;
+    Fl_Button* restore_game_button;
+    Fl_Button* new_game_button;
+    Fl_Button* delete_game_button;
 };
 
-struct BooksTable: Fl_Table {
-    BooksTable(int x, int y, MainWindow* m);
-    ~BooksTable() override;
+struct GamesTable: Fl_Table {
+    GamesTable(int x, int y, MainWindow* m);
+    ~GamesTable() override;
     void DrawHeader(char const* s, int X, int Y, int W, int H);
     void DrawData(char const* s, int X, int Y, int W, int H);
     void draw_cell(TableContext context, int ROW=0, int COL=0, int X=0, int Y=0, int W=0, int H=0) override;
     void populate();
-    void clear_books();
+    void clear_games();
     MainWindow* main_window;
-    size_t books_count;
-    struct book* books;
+    size_t games_count;
+    struct game* games;
 };
 
-struct RestoreBooksTable: Fl_Table {
-    RestoreBooksTable(int x, int y, MainWindow* m);
-    ~RestoreBooksTable() override;
+struct RestoreGamesTable: Fl_Table {
+    RestoreGamesTable(int x, int y, MainWindow* m);
+    ~RestoreGamesTable() override;
     void DrawHeader(char const* s, int X, int Y, int W, int H);
     void DrawData(char const* s, int X, int Y, int W, int H);
     void draw_cell(TableContext context, int ROW=0, int COL=0, int X=0, int Y=0, int W=0, int H=0) override;
     void populate();
-    void clear_books();
+    void clear_games();
     MainWindow* main_window;
-    size_t books_count;
-    struct book* books;
+    size_t games_count;
+    struct game* games;
 };

@@ -1,31 +1,31 @@
-#include "uni-books.hpp"
+#include "uni-games.hpp"
 
 UserPanel::UserPanel(int x, int y, MainWindow *m): Fl_Widget(x, y, 700, 500) {
     main_window = m;
     box = new Fl_Box(x, y, 700, 500);
-    table = new BooksTable(x, y, main_window);
-    restore_table = new RestoreBooksTable(x, y, main_window);
+    table = new GamesTable(x, y, main_window);
+    restore_table = new RestoreGamesTable(x, y, main_window);
     box->box(FL_UP_BOX);
-    restore_books_button = new Fl_Button(x + 0, y + 460, 200, 40, "Restore books");
-    restore_books_button->callback(restore_books_button_cb, main_window);
-    go_back_button = new Fl_Button(x + 0, y + 460, 200, 40, "Go back");
+    restore_games_button = new Fl_Button(x + 0, y + 460, 200, 40, "Restore games");
+    restore_games_button->callback(restore_games_button_cb, main_window);
+    go_back_button = new Fl_Button(x + 0, y + 460, 200, 40, "Manage games");
     go_back_button->callback(go_back_button_cb, main_window);
-    restore_book_button = new Fl_Button(x + 500, y + 460, 200, 40, "Restore book");
-    restore_book_button->callback(restore_book_button_cb, main_window);
-    new_book_button = new Fl_Button(x + 500, y + 460, 200, 40, "New book");
-    new_book_button->callback(new_book_cb, main_window);
-    delete_book_button = new Fl_Button(x + 300, y + 460, 200, 40, "Delete book");
-    delete_book_button->callback(delete_book_cb, main_window);
+    restore_game_button = new Fl_Button(x + 500, y + 460, 200, 40, "Restore game");
+    restore_game_button->callback(restore_game_button_cb, main_window);
+    new_game_button = new Fl_Button(x + 500, y + 460, 200, 40, "New game");
+    new_game_button->callback(new_game_cb, main_window);
+    delete_game_button = new Fl_Button(x + 300, y + 460, 200, 40, "Delete game");
+    delete_game_button->callback(delete_game_cb, main_window);
 }
 
 UserPanel::~UserPanel() {
     delete box;
     delete table;
     delete restore_table;
-    delete restore_books_button;
-    delete restore_book_button;
-    delete new_book_button;
-    delete delete_book_button;
+    delete restore_games_button;
+    delete restore_game_button;
+    delete new_game_button;
+    delete delete_game_button;
 }
 
 void UserPanel::draw() {}
@@ -34,36 +34,36 @@ void UserPanel::hide() {
     box->hide();
     table->hide();
     restore_table->hide();
-    restore_books_button->hide();
-    restore_book_button->hide();
+    restore_games_button->hide();
+    restore_game_button->hide();
     go_back_button->hide();
-    new_book_button->hide();
-    delete_book_button->hide();
+    new_game_button->hide();
+    delete_game_button->hide();
 }
 
 void UserPanel::show() {
     box->show();
     table->show();
     restore_table->hide();
-    restore_books_button->show();
-    restore_book_button->hide();
+    restore_games_button->show();
+    restore_game_button->hide();
     go_back_button->hide();
-    new_book_button->show();
-    delete_book_button->show();
+    new_game_button->show();
+    delete_game_button->show();
 }
 
-BooksTable::BooksTable(int x, int y, MainWindow *m): Fl_Table(x, y, 700, 460) {
+GamesTable::GamesTable(int x, int y, MainWindow *m): Fl_Table(x, y, 700, 460) {
     main_window = m;
-    books_count = 0;
-    books = nullptr;
+    games_count = 0;
+    games = nullptr;
     end();
 }
 
-BooksTable::~BooksTable() {
-    clear_books();
+GamesTable::~GamesTable() {
+    clear_games();
 }
 
-void BooksTable::DrawHeader(char const* s, int X, int Y, int W, int H) {
+void GamesTable::DrawHeader(char const* s, int X, int Y, int W, int H) {
     fl_push_clip(X, Y, W, H);
     fl_draw_box(FL_THIN_UP_BOX, X, Y, W, H, row_header_color());
     fl_color(FL_BLACK);
@@ -71,7 +71,7 @@ void BooksTable::DrawHeader(char const* s, int X, int Y, int W, int H) {
     fl_pop_clip();
 }
 
-void BooksTable::DrawData(char const* s, int X, int Y, int W, int H) {
+void GamesTable::DrawData(char const* s, int X, int Y, int W, int H) {
     fl_push_clip(X, Y, W, H);
     fl_color(FL_WHITE);
     fl_rectf(X, Y, W, H);
@@ -82,7 +82,7 @@ void BooksTable::DrawData(char const* s, int X, int Y, int W, int H) {
     fl_pop_clip();
 }
 
-void BooksTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y, int W, int H) {
+void GamesTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y, int W, int H) {
     switch (context) {
         case CONTEXT_STARTPAGE:
             fl_font(FL_HELVETICA, 16);
@@ -101,9 +101,9 @@ void BooksTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y,
         case CONTEXT_CELL:
             char const* data;
             if (COL == 0) {
-                data = books[ROW].name;
+                data = games[ROW].name;
             } else if (COL == 1) {
-                data = books[ROW].author;
+                data = games[ROW].author;
             } else {
                 data = "error";
             }
@@ -114,17 +114,17 @@ void BooksTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y,
     }
 }
 
-void BooksTable::populate() {
+void GamesTable::populate() {
     char* err;
-    clear_books();
-    ptrdiff_t num_books = database_get_books(main_window->database_handle, false, &books, &err);
-    if (num_books < 0) {
-        fl_message("Failed to load books: %s", err);
+    clear_games();
+    ptrdiff_t num_games = database_get_games(main_window->database_handle, false, &games, &err);
+    if (num_games < 0) {
+        fl_message("Failed to load games: %s", err);
         free(err);
         return;
     } else {
-        this->books_count = num_books;
-        rows(num_books);
+        this->games_count = num_games;
+        rows(num_games);
         row_header(0);
         row_height_all(30);
         row_resize(1);
@@ -135,77 +135,77 @@ void BooksTable::populate() {
     }
 }
 
-void BooksTable::clear_books() {
-    if (books != nullptr) {
-        for (size_t i = 0; i < books_count; ++i) {
-            free(books[i].author);
-            free(books[i].name);
+void GamesTable::clear_games() {
+    if (games != nullptr) {
+        for (size_t i = 0; i < games_count; ++i) {
+            free(games[i].author);
+            free(games[i].name);
         }
-        free(books);
-        books = nullptr;
+        free(games);
+        games = nullptr;
     }
 }
 
-void new_book_cb(Fl_Widget*, void* m) {
-    char bookname[81];
+void new_game_cb(Fl_Widget*, void* m) {
+    char gamename[81];
     char author[81];
     auto main_window = reinterpret_cast<MainWindow *>(m);
     char const *input_text;
     {
-        input_text = fl_input("Book name");
+        input_text = fl_input("Game name");
         if (input_text == nullptr) {
             return;
         } else if (strlen(input_text) > 80) {
-            fl_message("Book name too long!");
+            fl_message("Game name too long!");
             return;
         }
-        strcpy(bookname, input_text);
-        input_text = fl_input("Book author");
+        strcpy(gamename, input_text);
+        input_text = fl_input("Game author");
         if (input_text == nullptr) {
             return;
         } else if (strlen(input_text) > 80) {
-            fl_message("Book author too long!");
+            fl_message("Game author too long!");
             return;
         }
         strcpy(author, input_text);
     }
     {
         char* err;
-        if (!database_add_book(main_window->database_handle, bookname, author, &err)) {
-            fl_message("Failed to add book %s: %s", bookname, err);
+        if (!database_add_game(main_window->database_handle, gamename, author, &err)) {
+            fl_message("Failed to add game %s: %s", gamename, err);
             free(err);
         }
     }
     main_window->user_panel->table->populate();
 }
 
-void delete_book_cb(Fl_Widget*, void* m) {
+void delete_game_cb(Fl_Widget*, void* m) {
     auto main_window = reinterpret_cast<MainWindow*>(m);
-    char const* bookname = fl_input("Book name to delete");
-    if (bookname == nullptr) {
+    char const* gamename = fl_input("Game name to delete");
+    if (gamename == nullptr) {
         return;
     } else {
         char* err;
-        if (!database_delete_book(main_window->database_handle, bookname, &err)) {
-            fl_message("Failed to delete book %s: %s", bookname, err);
+        if (!database_delete_game(main_window->database_handle, gamename, &err)) {
+            fl_message("Failed to delete game %s: %s", gamename, err);
             free(err);
         }
         main_window->user_panel->table->populate();
     }
 }
 
-RestoreBooksTable::RestoreBooksTable(int x, int y, MainWindow *m): Fl_Table(x, y, 700, 460) {
+RestoreGamesTable::RestoreGamesTable(int x, int y, MainWindow *m): Fl_Table(x, y, 700, 460) {
     main_window = m;
-    books_count = 0;
-    books = nullptr;
+    games_count = 0;
+    games = nullptr;
     end();
 }
 
-RestoreBooksTable::~RestoreBooksTable() {
-    clear_books();
+RestoreGamesTable::~RestoreGamesTable() {
+    clear_games();
 }
 
-void RestoreBooksTable::DrawHeader(char const* s, int X, int Y, int W, int H) {
+void RestoreGamesTable::DrawHeader(char const* s, int X, int Y, int W, int H) {
     fl_push_clip(X, Y, W, H);
     fl_draw_box(FL_THIN_UP_BOX, X, Y, W, H, row_header_color());
     fl_color(FL_BLACK);
@@ -213,7 +213,7 @@ void RestoreBooksTable::DrawHeader(char const* s, int X, int Y, int W, int H) {
     fl_pop_clip();
 }
 
-void RestoreBooksTable::DrawData(char const* s, int X, int Y, int W, int H) {
+void RestoreGamesTable::DrawData(char const* s, int X, int Y, int W, int H) {
     fl_push_clip(X, Y, W, H);
     fl_color(FL_WHITE);
     fl_rectf(X, Y, W, H);
@@ -224,7 +224,7 @@ void RestoreBooksTable::DrawData(char const* s, int X, int Y, int W, int H) {
     fl_pop_clip();
 }
 
-void RestoreBooksTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y, int W, int H) {
+void RestoreGamesTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y, int W, int H) {
     switch (context) {
         case CONTEXT_STARTPAGE:
             fl_font(FL_HELVETICA, 16);
@@ -243,9 +243,9 @@ void RestoreBooksTable::draw_cell(TableContext context, int ROW, int COL, int X,
         case CONTEXT_CELL:
             char const* data;
             if (COL == 0) {
-                data = books[ROW].name;
+                data = games[ROW].name;
             } else if (COL == 1) {
-                data = books[ROW].author;
+                data = games[ROW].author;
             } else {
                 data = "error";
             }
@@ -256,17 +256,17 @@ void RestoreBooksTable::draw_cell(TableContext context, int ROW, int COL, int X,
     }
 }
 
-void RestoreBooksTable::populate() {
+void RestoreGamesTable::populate() {
     char* err;
-    clear_books();
-    ptrdiff_t num_books = database_get_books(main_window->database_handle, true, &books, &err);
-    if (num_books < 0) {
-        fl_message("Failed to load books: %s", err);
+    clear_games();
+    ptrdiff_t num_games = database_get_games(main_window->database_handle, true, &games, &err);
+    if (num_games < 0) {
+        fl_message("Failed to load games: %s", err);
         free(err);
         return;
     } else {
-        this->books_count = num_books;
-        rows(num_books);
+        this->games_count = num_games;
+        rows(num_games);
         row_header(0);
         row_height_all(30);
         row_resize(1);
@@ -277,27 +277,27 @@ void RestoreBooksTable::populate() {
     }
 }
 
-void RestoreBooksTable::clear_books() {
-    if (books != nullptr) {
-        for (size_t i = 0; i < books_count; ++i) {
-            free(books[i].author);
-            free(books[i].name);
+void RestoreGamesTable::clear_games() {
+    if (games != nullptr) {
+        for (size_t i = 0; i < games_count; ++i) {
+            free(games[i].author);
+            free(games[i].name);
         }
-        free(books);
-        books = nullptr;
+        free(games);
+        games = nullptr;
     }
 }
 
-void restore_books_button_cb(Fl_Widget*, void* m) {
+void restore_games_button_cb(Fl_Widget*, void* m) {
     auto main_window = reinterpret_cast<MainWindow*>(m);
     main_window->user_panel->table->hide();
-    main_window->user_panel->restore_books_button->hide();
-    main_window->user_panel->delete_book_button->hide();
-    main_window->user_panel->new_book_button->hide();
+    main_window->user_panel->restore_games_button->hide();
+    main_window->user_panel->delete_game_button->hide();
+    main_window->user_panel->new_game_button->hide();
     main_window->user_panel->restore_table->show();
     main_window->user_panel->restore_table->populate();
     main_window->user_panel->go_back_button->show();
-    main_window->user_panel->restore_book_button->show();
+    main_window->user_panel->restore_game_button->show();
 }
 
 void go_back_button_cb(Fl_Widget*, void* m) {
@@ -306,15 +306,15 @@ void go_back_button_cb(Fl_Widget*, void* m) {
     main_window->user_panel->table->populate();
 }
 
-void restore_book_button_cb(Fl_Widget*, void* m) {
+void restore_game_button_cb(Fl_Widget*, void* m) {
     auto main_window = reinterpret_cast<MainWindow*>(m);
-    char const* bookname = fl_input("Book name to restore");
-    if (bookname == nullptr) {
+    char const* gamename = fl_input("Game name to restore");
+    if (gamename == nullptr) {
         return;
     } else {
         char* err;
-        if (!database_restore_book(main_window->database_handle, bookname, &err)) {
-            fl_message("Failed to restore book %s: %s", bookname, err);
+        if (!database_restore_game(main_window->database_handle, gamename, &err)) {
+            fl_message("Failed to restore game %s: %s", gamename, err);
             free(err);
         }
         main_window->user_panel->restore_table->populate();

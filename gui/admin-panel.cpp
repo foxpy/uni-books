@@ -1,4 +1,4 @@
-#include "uni-books.hpp"
+#include "uni-games.hpp"
 
 AdminPanel::AdminPanel(int x, int y, MainWindow* m): Fl_Widget(x, y, 700, 500) {
     main_window = m;

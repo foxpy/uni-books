@@ -6,10 +6,10 @@ add_library(DatabaseWrapper
     database_check_credentials.c
     database_get_users.c
     database_delete_user.c
-    database_get_books.c
-    database_delete_book.c
-    database_add_book.c
-    database_restore_book.c
+    database_get_games.c
+    database_delete_game.c
+    database_add_game.c
+    database_restore_game.c
     database-wrapper_impl/schema.c
     database-wrapper_impl/hash_password.c
     database-wrapper_impl/check_password.c

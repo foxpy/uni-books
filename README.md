@@ -1,3 +1,3 @@
-# uni-books
+# uni-games
 
 Library database as university homework.
