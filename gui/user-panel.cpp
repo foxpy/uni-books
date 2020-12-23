@@ -90,9 +90,13 @@ void BooksTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y,
         case CONTEXT_COL_HEADER:
             char const* header_name;
             if (COL == 0) {
-                header_name = "Name";
+                header_name = "ISBN";
             } else if (COL == 1) {
+                header_name = "Name";
+            } else if (COL == 2) {
                 header_name = "Author";
+            } else if (COL == 3) {
+                header_name = "Catalog";
             } else {
                 header_name = "error";
             }
@@ -101,9 +105,13 @@ void BooksTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y,
         case CONTEXT_CELL:
             char const* data;
             if (COL == 0) {
-                data = books[ROW].name;
+                data = books[ROW].isbn;
             } else if (COL == 1) {
+                data = books[ROW].name;
+            } else if (COL == 2) {
                 data = books[ROW].author;
+            } else if (COL == 3) {
+                data = books[ROW].catalog;
             } else {
                 data = "error";
             }
@@ -128,7 +136,7 @@ void BooksTable::populate() {
         row_header(0);
         row_height_all(30);
         row_resize(1);
-        cols(2);
+        cols(4);
         col_header(1);
         col_width_all(200);
         col_resize(1);
@@ -138,8 +146,10 @@ void BooksTable::populate() {
 void BooksTable::clear_books() {
     if (books != nullptr) {
         for (size_t i = 0; i < books_count; ++i) {
-            free(books[i].author);
+            free(books[i].isbn);
             free(books[i].name);
+            free(books[i].author);
+            free(books[i].catalog);
         }
         free(books);
         books = nullptr;
@@ -147,11 +157,21 @@ void BooksTable::clear_books() {
 }
 
 void new_book_cb(Fl_Widget*, void* m) {
+    char isbn[81];
     char bookname[81];
     char author[81];
+    char catalog[81];
     auto main_window = reinterpret_cast<MainWindow *>(m);
     char const *input_text;
     {
+        input_text = fl_input("ISBN code");
+        if (input_text == nullptr) {
+            return;
+        } else if (strlen(input_text) > 80) {
+            fl_message("ISBN code too long!");
+            return;
+        }
+        strcpy(isbn, input_text);
         input_text = fl_input("Book name");
         if (input_text == nullptr) {
             return;
@@ -168,10 +188,18 @@ void new_book_cb(Fl_Widget*, void* m) {
             return;
         }
         strcpy(author, input_text);
+        input_text = fl_input("Catalog name");
+        if (input_text == nullptr) {
+            return;
+        } else if (strlen(input_text) > 80) {
+            fl_message("Catalog name too long!");
+            return;
+        }
+        strcpy(catalog, input_text);
     }
     {
         char* err;
-        if (!database_add_book(main_window->database_handle, bookname, author, &err)) {
+        if (!database_add_book(main_window->database_handle, isbn, bookname, author, catalog, &err)) {
             fl_message("Failed to add book %s: %s", bookname, err);
             free(err);
         }
@@ -232,9 +260,13 @@ void RestoreBooksTable::draw_cell(TableContext context, int ROW, int COL, int X,
         case CONTEXT_COL_HEADER:
             char const* header_name;
             if (COL == 0) {
-                header_name = "Name";
+                header_name = "ISBN";
             } else if (COL == 1) {
+                header_name = "Name";
+            } else if (COL == 2) {
                 header_name = "Author";
+            } else if (COL == 3) {
+                header_name = "Catalog";
             } else {
                 header_name = "error";
             }
@@ -243,9 +275,13 @@ void RestoreBooksTable::draw_cell(TableContext context, int ROW, int COL, int X,
         case CONTEXT_CELL:
             char const* data;
             if (COL == 0) {
-                data = books[ROW].name;
+                data = books[ROW].isbn;
             } else if (COL == 1) {
+                data = books[ROW].name;
+            } else if (COL == 2) {
                 data = books[ROW].author;
+            } else if (COL == 3) {
+                data = books[ROW].catalog;
             } else {
                 data = "error";
             }
@@ -270,7 +306,7 @@ void RestoreBooksTable::populate() {
         row_header(0);
         row_height_all(30);
         row_resize(1);
-        cols(2);
+        cols(4);
         col_header(1);
         col_width_all(200);
         col_resize(1);
@@ -280,8 +316,10 @@ void RestoreBooksTable::populate() {
 void RestoreBooksTable::clear_books() {
     if (books != nullptr) {
         for (size_t i = 0; i < books_count; ++i) {
-            free(books[i].author);
+            free(books[i].isbn);
             free(books[i].name);
+            free(books[i].author);
+            free(books[i].catalog);
         }
         free(books);
         books = nullptr;

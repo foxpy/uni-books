@@ -22,7 +22,7 @@ ptrdiff_t database_get_books(db* database, bool deleted_books, struct book** dst
     sqlite3_stmt* stmt;
     {
         int rc;
-        char* query = sprintf_alloc("SELECT name, author FROM Books WHERE exists_flag = %s;",
+        char* query = sprintf_alloc("SELECT name, author, isbn, catalog FROM Books WHERE exists_flag = %s;",
                                           (deleted_books) ? "FALSE" : "TRUE");
         rc = sqlite3_prepare_v2(database->db_file, query, STMT_NULL_TERMINATED, &stmt, NULL);
         free(query);
@@ -47,6 +47,8 @@ ptrdiff_t database_get_books(db* database, bool deleted_books, struct book** dst
             sqlite3_step(stmt);
             books[i].name = sprintf_alloc("%s", sqlite3_column_text(stmt, 0));
             books[i].author = sprintf_alloc("%s", sqlite3_column_text(stmt, 1));
+            books[i].isbn = sprintf_alloc("%s", sqlite3_column_text(stmt, 2));
+            books[i].catalog = sprintf_alloc("%s", sqlite3_column_text(stmt, 3));
         }
         sqlite3_finalize(stmt);
         return num_books;
