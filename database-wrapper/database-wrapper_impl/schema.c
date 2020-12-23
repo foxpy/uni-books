@@ -10,5 +10,5 @@ char const* schema =
         "    game_id INTEGER PRIMARY KEY,\n"
         "    exists_flag INTEGER NOT NULL,\n"
         "    name TEXT NOT NULL,\n"
-        "    author TEXT NOT NULL\n"
+        "    publisher TEXT NOT NULL\n"
         ");\n";

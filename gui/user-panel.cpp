@@ -92,7 +92,7 @@ void GamesTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y,
             if (COL == 0) {
                 header_name = "Name";
             } else if (COL == 1) {
-                header_name = "Author";
+                header_name = "Publisher";
             } else {
                 header_name = "error";
             }
@@ -103,7 +103,7 @@ void GamesTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y,
             if (COL == 0) {
                 data = games[ROW].name;
             } else if (COL == 1) {
-                data = games[ROW].author;
+                data = games[ROW].publisher;
             } else {
                 data = "error";
             }
@@ -138,7 +138,7 @@ void GamesTable::populate() {
 void GamesTable::clear_games() {
     if (games != nullptr) {
         for (size_t i = 0; i < games_count; ++i) {
-            free(games[i].author);
+            free(games[i].publisher);
             free(games[i].name);
         }
         free(games);
@@ -148,7 +148,7 @@ void GamesTable::clear_games() {
 
 void new_game_cb(Fl_Widget*, void* m) {
     char gamename[81];
-    char author[81];
+    char publisher[81];
     auto main_window = reinterpret_cast<MainWindow *>(m);
     char const *input_text;
     {
@@ -160,18 +160,18 @@ void new_game_cb(Fl_Widget*, void* m) {
             return;
         }
         strcpy(gamename, input_text);
-        input_text = fl_input("Game author");
+        input_text = fl_input("Game publisher");
         if (input_text == nullptr) {
             return;
         } else if (strlen(input_text) > 80) {
-            fl_message("Game author too long!");
+            fl_message("Game publisher name is too long!");
             return;
         }
-        strcpy(author, input_text);
+        strcpy(publisher, input_text);
     }
     {
         char* err;
-        if (!database_add_game(main_window->database_handle, gamename, author, &err)) {
+        if (!database_add_game(main_window->database_handle, gamename, publisher, &err)) {
             fl_message("Failed to add game %s: %s", gamename, err);
             free(err);
         }
@@ -234,7 +234,7 @@ void RestoreGamesTable::draw_cell(TableContext context, int ROW, int COL, int X,
             if (COL == 0) {
                 header_name = "Name";
             } else if (COL == 1) {
-                header_name = "Author";
+                header_name = "Publisher";
             } else {
                 header_name = "error";
             }
@@ -245,7 +245,7 @@ void RestoreGamesTable::draw_cell(TableContext context, int ROW, int COL, int X,
             if (COL == 0) {
                 data = games[ROW].name;
             } else if (COL == 1) {
-                data = games[ROW].author;
+                data = games[ROW].publisher;
             } else {
                 data = "error";
             }
@@ -280,7 +280,7 @@ void RestoreGamesTable::populate() {
 void RestoreGamesTable::clear_games() {
     if (games != nullptr) {
         for (size_t i = 0; i < games_count; ++i) {
-            free(games[i].author);
+            free(games[i].publisher);
             free(games[i].name);
         }
         free(games);
