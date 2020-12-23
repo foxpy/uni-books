@@ -90,9 +90,13 @@ void GamesTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y,
         case CONTEXT_COL_HEADER:
             char const* header_name;
             if (COL == 0) {
-                header_name = "Name";
+                header_name = "Added date";
             } else if (COL == 1) {
+                header_name = "Game";
+            } else if (COL == 2) {
                 header_name = "Publisher";
+            } else if (COL == 3) {
+                header_name = "Score";
             } else {
                 header_name = "error";
             }
@@ -101,9 +105,13 @@ void GamesTable::draw_cell(TableContext context, int ROW, int COL, int X, int Y,
         case CONTEXT_CELL:
             char const* data;
             if (COL == 0) {
-                data = games[ROW].name;
+                data = games[ROW].added_date;
             } else if (COL == 1) {
+                data = games[ROW].name;
+            } else if (COL == 2) {
                 data = games[ROW].publisher;
+            } else if (COL == 3) {
+                data = games[ROW].score;
             } else {
                 data = "error";
             }
@@ -128,7 +136,7 @@ void GamesTable::populate() {
         row_header(0);
         row_height_all(30);
         row_resize(1);
-        cols(2);
+        cols(4);
         col_header(1);
         col_width_all(200);
         col_resize(1);
@@ -138,8 +146,10 @@ void GamesTable::populate() {
 void GamesTable::clear_games() {
     if (games != nullptr) {
         for (size_t i = 0; i < games_count; ++i) {
+            free(games[i].added_date);
             free(games[i].publisher);
             free(games[i].name);
+            free(games[i].score);
         }
         free(games);
         games = nullptr;
@@ -149,6 +159,7 @@ void GamesTable::clear_games() {
 void new_game_cb(Fl_Widget*, void* m) {
     char gamename[81];
     char publisher[81];
+    char score[81];
     auto main_window = reinterpret_cast<MainWindow *>(m);
     char const *input_text;
     {
@@ -168,10 +179,18 @@ void new_game_cb(Fl_Widget*, void* m) {
             return;
         }
         strcpy(publisher, input_text);
+        input_text = fl_input("Game score");
+        if (input_text == nullptr) {
+            return;
+        } else if (strlen(input_text) > 80) {
+            fl_message("Game score is too long!");
+            return;
+        }
+        strcpy(score, input_text);
     }
     {
         char* err;
-        if (!database_add_game(main_window->database_handle, gamename, publisher, &err)) {
+        if (!database_add_game(main_window->database_handle, gamename, publisher, score, &err)) {
             fl_message("Failed to add game %s: %s", gamename, err);
             free(err);
         }
@@ -232,9 +251,13 @@ void RestoreGamesTable::draw_cell(TableContext context, int ROW, int COL, int X,
         case CONTEXT_COL_HEADER:
             char const* header_name;
             if (COL == 0) {
-                header_name = "Name";
+                header_name = "Added date";
             } else if (COL == 1) {
+                header_name = "Game";
+            } else if (COL == 2) {
                 header_name = "Publisher";
+            } else if (COL == 3) {
+                header_name = "Score";
             } else {
                 header_name = "error";
             }
@@ -243,9 +266,13 @@ void RestoreGamesTable::draw_cell(TableContext context, int ROW, int COL, int X,
         case CONTEXT_CELL:
             char const* data;
             if (COL == 0) {
-                data = games[ROW].name;
+                data = games[ROW].added_date;
             } else if (COL == 1) {
+                data = games[ROW].name;
+            } else if (COL == 2) {
                 data = games[ROW].publisher;
+            } else if (COL == 3) {
+                data = games[ROW].score;
             } else {
                 data = "error";
             }
@@ -270,7 +297,7 @@ void RestoreGamesTable::populate() {
         row_header(0);
         row_height_all(30);
         row_resize(1);
-        cols(2);
+        cols(4);
         col_header(1);
         col_width_all(200);
         col_resize(1);
@@ -280,8 +307,10 @@ void RestoreGamesTable::populate() {
 void RestoreGamesTable::clear_games() {
     if (games != nullptr) {
         for (size_t i = 0; i < games_count; ++i) {
+            free(games[i].added_date);
             free(games[i].publisher);
             free(games[i].name);
+            free(games[i].score);
         }
         free(games);
         games = nullptr;

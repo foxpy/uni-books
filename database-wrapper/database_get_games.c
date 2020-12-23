@@ -22,7 +22,8 @@ ptrdiff_t database_get_games(db* database, bool deleted_games, struct game** dst
     sqlite3_stmt* stmt;
     {
         int rc;
-        char* query = sprintf_alloc("SELECT name, publisher FROM Games WHERE exists_flag = %s;",
+        char* query = sprintf_alloc("SELECT added_date, name, publisher, score "
+                                    "FROM Games WHERE exists_flag = %s;",
                                     (deleted_games) ? "FALSE" : "TRUE");
         rc = sqlite3_prepare_v2(database->db_file, query, STMT_NULL_TERMINATED, &stmt, NULL);
         free(query);
@@ -45,8 +46,10 @@ ptrdiff_t database_get_games(db* database, bool deleted_games, struct game** dst
         *dst = games;
         for (size_t i = 0, end = num_games; i < end; ++i) {
             sqlite3_step(stmt);
-            games[i].name = sprintf_alloc("%s", sqlite3_column_text(stmt, 0));
-            games[i].publisher = sprintf_alloc("%s", sqlite3_column_text(stmt, 1));
+            games[i].added_date = sprintf_alloc("%s", sqlite3_column_text(stmt, 0));
+            games[i].name = sprintf_alloc("%s", sqlite3_column_text(stmt, 1));
+            games[i].publisher = sprintf_alloc("%s", sqlite3_column_text(stmt, 2));
+            games[i].score = sprintf_alloc("%s", sqlite3_column_text(stmt, 3));
         }
         sqlite3_finalize(stmt);
         return num_games;

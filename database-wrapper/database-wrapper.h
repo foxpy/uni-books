@@ -20,8 +20,10 @@ typedef struct user {
 } user;
 
 typedef struct game {
+    char* added_date;
     char* name;
     char* publisher;
+    char* score;
 } game;
 
 bool database_new(char const* path, char** err, char const* admin_password);
@@ -35,4 +37,4 @@ bool database_delete_user(db* database, char const* username, char** err);
 ptrdiff_t database_get_games(db* database, bool deleted_games, struct game** dst, char** err);
 bool database_delete_game(db* database, char const* gamename, char** err);
 bool database_restore_game(db* database, char const* gamename, char** err);
-bool database_add_game(db* database, char const* gamename, char const* publisher, char** err);
+bool database_add_game(db* database, char const* gamename, char const* publisher, char const* score, char** err);

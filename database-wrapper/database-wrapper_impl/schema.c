@@ -9,6 +9,8 @@ char const* schema =
         "CREATE TABLE Games (\n"
         "    game_id INTEGER PRIMARY KEY,\n"
         "    exists_flag INTEGER NOT NULL,\n"
+        "    added_date TEXT NOT NULL,\n"
         "    name TEXT NOT NULL,\n"
-        "    publisher TEXT NOT NULL\n"
+        "    publisher TEXT NOT NULL,\n"
+        "    score TEXT NOT NULL\n"
         ");\n";
