@@ -35,7 +35,7 @@ void menu_file_new_cb(Fl_Widget*, void* m) {
     auto* main_window = reinterpret_cast<MainWindow*>(m);
     Fl_Native_File_Chooser file_chooser;
     file_chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
-    file_chooser.preset_file("library.db");
+    file_chooser.preset_file("games.db");
     if (file_chooser.show() != 0) {
         return;
     }
