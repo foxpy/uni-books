@@ -1,10 +1,13 @@
 #include "database-wrapper_impl/database-wrapper_impl.h"
 
-static ptrdiff_t get_books_count(sqlite3* conn, char** err) {
+static ptrdiff_t get_books_count(sqlite3* conn, bool deleted_books, char** err) {
     int rc;
-    char const* query = "SELECT count(book_id) FROM Books;";
+    char* query = sprintf_alloc("SELECT count(book_id) FROM Books WHERE exists_flag = %s;",
+                                     (deleted_books) ? "FALSE" : "TRUE");
     sqlite3_stmt* stmt;
-    if ((rc = sqlite3_prepare_v2(conn, query, STMT_NULL_TERMINATED, &stmt, NULL))) {
+    rc = sqlite3_prepare_v2(conn, query, STMT_NULL_TERMINATED, &stmt, NULL);
+    free(query);
+    if (rc) {
         *err = sprintf_alloc("Failed to get number of books: %s", sqlite3_errstr(rc));
         sqlite3_finalize(stmt);
         return -1;
@@ -15,18 +18,21 @@ static ptrdiff_t get_books_count(sqlite3* conn, char** err) {
     return ret;
 }
 
-ptrdiff_t database_get_books(db* database, struct book** dst, char** err) {
+ptrdiff_t database_get_books(db* database, bool deleted_books, struct book** dst, char** err) {
     sqlite3_stmt* stmt;
     {
         int rc;
-        char const* query = "SELECT name, author FROM Books;";
-        if ((rc = sqlite3_prepare_v2(database->db_file, query, STMT_NULL_TERMINATED, &stmt, NULL))) {
+        char* query = sprintf_alloc("SELECT name, author FROM Books WHERE exists_flag = %s;",
+                                          (deleted_books) ? "FALSE" : "TRUE");
+        rc = sqlite3_prepare_v2(database->db_file, query, STMT_NULL_TERMINATED, &stmt, NULL);
+        free(query);
+        if (rc) {
             *err = sprintf_alloc("Failed to get list of users: %s", sqlite3_errstr(rc));
             sqlite3_finalize(stmt);
             return -1;
         }
     }
-    ptrdiff_t num_books = get_books_count(database->db_file, err);
+    ptrdiff_t num_books = get_books_count(database->db_file, deleted_books, err);
     if (num_books < 0) {
         sqlite3_finalize(stmt);
         return -1;

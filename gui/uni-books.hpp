@@ -23,6 +23,7 @@ struct AdminPanel;
 struct UsersTable;
 struct UserPanel;
 struct BooksTable;
+struct RestoreBooksTable;
 
 void menu_file_new_cb(Fl_Widget*, void*);
 void menu_file_open_cb(Fl_Widget*, void*);
@@ -34,6 +35,9 @@ void new_user_cb(Fl_Widget*, void*);
 void delete_user_cb(Fl_Widget*, void*);
 void new_book_cb(Fl_Widget*, void*);
 void delete_book_cb(Fl_Widget*, void*);
+void restore_books_button_cb(Fl_Widget*, void*);
+void go_back_button_cb(Fl_Widget*, void*);
+void restore_book_button_cb(Fl_Widget*, void*);
 
 struct MainWindow: Fl_Double_Window {
     MainWindow(int w, int h, char const* t);
@@ -94,6 +98,10 @@ struct UserPanel: Fl_Widget {
     MainWindow* main_window;
     Fl_Box* box;
     BooksTable* table;
+    RestoreBooksTable* restore_table;
+    Fl_Button* restore_books_button;
+    Fl_Button* go_back_button;
+    Fl_Button* restore_book_button;
     Fl_Button* new_book_button;
     Fl_Button* delete_book_button;
 };
@@ -101,6 +109,19 @@ struct UserPanel: Fl_Widget {
 struct BooksTable: Fl_Table {
     BooksTable(int x, int y, MainWindow* m);
     ~BooksTable() override;
+    void DrawHeader(char const* s, int X, int Y, int W, int H);
+    void DrawData(char const* s, int X, int Y, int W, int H);
+    void draw_cell(TableContext context, int ROW=0, int COL=0, int X=0, int Y=0, int W=0, int H=0) override;
+    void populate();
+    void clear_books();
+    MainWindow* main_window;
+    size_t books_count;
+    struct book* books;
+};
+
+struct RestoreBooksTable: Fl_Table {
+    RestoreBooksTable(int x, int y, MainWindow* m);
+    ~RestoreBooksTable() override;
     void DrawHeader(char const* s, int X, int Y, int W, int H);
     void DrawData(char const* s, int X, int Y, int W, int H);
     void draw_cell(TableContext context, int ROW=0, int COL=0, int X=0, int Y=0, int W=0, int H=0) override;
